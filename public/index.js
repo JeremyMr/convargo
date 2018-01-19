@@ -175,9 +175,22 @@ function generate_shipping_prices(deliveries, truckers){
     else if(deliveries[D].volume > 5){
       deliveries[D].price = deliveries[D].price - (deliveries[D].price * 0.1);
     }    
-    console.log("Delivery " + deliveries[D].id + " price: " + deliveries[D].price);
+    //console.log("Delivery " + deliveries[D].id + " price: " + deliveries[D].price);
   }
 }
 
 generate_shipping_prices(deliveries, truckers);
+
+//Step 3 :
+function compute_commission(deliveries){
+  var temp_commission = 0;
+  for(var D in deliveries){
+    temp_commission = deliveries[D].price * 0.3;
+    deliveries[D].commission.insurance = temp_commission * 0.5;
+    deliveries[D].commission.treasury = Math.floor(deliveries[D].distance/500) +1;
+    deliveries[D].commission.convargo = temp_commission - (deliveries[D].commission.insurance + deliveries[D].commission.treasury);
+  }
+}
+
+compute_commission(deliveries);
 
