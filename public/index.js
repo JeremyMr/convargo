@@ -149,7 +149,7 @@ console.log(truckers);
 console.log(deliveries);
 console.log(actors);
 
-//Step 1 :
+//Step 1 & 2 :
 //function to compute the price of a delivery
 function compute_price(T, D){
   var price = truckers[T].pricePerKm * deliveries[D].distance;
@@ -165,11 +165,24 @@ function generate_shipping_prices(deliveries, truckers){
     var T = 0;
     while(truckers[T].id != trucker_id_temp){
         T++;
-    }
+    }    
     deliveriesPrices[i] = compute_price(T, D);
-    console.log("Delivery " + deliveries[D].id + " price: " + deliveriesPrices[D]);
+    //Step 2 : price deacreases
+    if(deliveries[D].volume > 25){
+      deliveriesPrices[i] = deliveriesPrices[i] - (deliveriesPrices[i] * 0.5);
+    }
+    else if(deliveries[D].volume > 10){
+      deliveriesPrices[i] = deliveriesPrices[i] - (deliveriesPrices[i] * 0.3);
+    }
+    else if(deliveries[D].volume > 5){
+      deliveriesPrices[i] = deliveriesPrices[i] - (deliveriesPrices[i] * 0.1);
+    }
+    //save in the array
+    deliveries[D].price = deliveriesPrices[i];
+    console.log("Delivery " + deliveries[D].id + " price: " + deliveries[D].price);
     i++;
   }
 }
 
 generate_shipping_prices(deliveries, truckers);
+
