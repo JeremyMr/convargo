@@ -148,3 +148,28 @@ const actors = [{
 console.log(truckers);
 console.log(deliveries);
 console.log(actors);
+
+//Step 1 :
+//function to compute the price of a delivery
+function compute_price(T, D){
+  var price = truckers[T].pricePerKm * deliveries[D].distance;
+  price += truckers[T].pricePerVolume * deliveries[D].volume; 
+  return price;
+}
+
+function generate_shipping_prices(deliveries, truckers){
+  var deliveriesPrices = [];
+  var i = 0;
+  for(var D in deliveries){
+    var trucker_id_temp = deliveries[D].truckerId;
+    var T = 0;
+    while(truckers[T].id != trucker_id_temp){
+        T++;
+    }
+    deliveriesPrices[i] = compute_price(T, D);
+    console.log("Delivery " + deliveries[D].id + " price: " + deliveriesPrices[D]);
+    i++;
+  }
+}
+
+generate_shipping_prices(deliveries, truckers);
