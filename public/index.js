@@ -158,29 +158,24 @@ function compute_price(T, D){
 }
 
 function generate_shipping_prices(deliveries, truckers){
-  var deliveriesPrices = [];
-  var i = 0;
   for(var D in deliveries){
     var trucker_id_temp = deliveries[D].truckerId;
     var T = 0;
     while(truckers[T].id != trucker_id_temp){
         T++;
     }    
-    deliveriesPrices[i] = compute_price(T, D);
+    deliveries[D].price = compute_price(T, D);
     //Step 2 : price deacreases
     if(deliveries[D].volume > 25){
-      deliveriesPrices[i] = deliveriesPrices[i] - (deliveriesPrices[i] * 0.5);
+      deliveries[D].price = deliveries[D].price - (deliveries[D].price * 0.5);
     }
     else if(deliveries[D].volume > 10){
-      deliveriesPrices[i] = deliveriesPrices[i] - (deliveriesPrices[i] * 0.3);
+      deliveries[D].price = deliveries[D].price - (deliveries[D].price * 0.3);
     }
     else if(deliveries[D].volume > 5){
-      deliveriesPrices[i] = deliveriesPrices[i] - (deliveriesPrices[i] * 0.1);
-    }
-    //save in the array
-    deliveries[D].price = deliveriesPrices[i];
+      deliveries[D].price = deliveries[D].price - (deliveries[D].price * 0.1);
+    }    
     console.log("Delivery " + deliveries[D].id + " price: " + deliveries[D].price);
-    i++;
   }
 }
 
