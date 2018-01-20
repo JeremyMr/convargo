@@ -131,11 +131,11 @@ const actors = [{
     'type': 'credit',
     'amount': 0
   }, {
-    'who': 'treasury',
+    'who': 'insurance',
     'type': 'credit',
     'amount': 0
   }, {
-    'who': 'insurance',
+    'who': 'treasury',
     'type': 'credit',
     'amount': 0
   }, {
@@ -175,11 +175,10 @@ function generate_shipping_prices(deliveries, truckers){
     else if(deliveries[D].volume > 5){
       deliveries[D].price = deliveries[D].price - (deliveries[D].price * 0.1);
     }    
-    //console.log("Delivery " + deliveries[D].id + " price: " + deliveries[D].price);
   }
 }
 
-
+generate_shipping_prices(deliveries, truckers);
 
 //Step 3 :
 function compute_commission(deliveries){
@@ -192,7 +191,7 @@ function compute_commission(deliveries){
   }
 }
 
-
+compute_commission(deliveries);
 
 //Step 4 :
 function compute_Reduction(deliveries){
@@ -204,7 +203,7 @@ function compute_Reduction(deliveries){
   }
 }
 
-
+compute_Reduction(deliveries);
 
 //Step 5 :
 function compute_amounts(deliveries, actors){
@@ -215,7 +214,6 @@ function compute_amounts(deliveries, actors){
         D++;
     } 
     for(var p in actors[A].payment){
-      console.log(p);
       //for the shipper :      
       if(p == 0){
       //Shipping price + deductible reduction
@@ -229,15 +227,15 @@ function compute_amounts(deliveries, actors){
         generate_shipping_prices(deliveries, truckers);        
         actors[A].payment[p].amount = deliveries[D].price - (deliveries[D].price * 0.3);
       }
-      //for the treasury, the insurance and convargo :
+      //for the insurance, the treasury and convargo :
       generate_shipping_prices(deliveries, truckers);
       compute_commission(deliveries);      
       if(p == 2){
         //its part of the commission
-        actors[A].payment[p].amount = deliveries[D].commission.treasury;
+        actors[A].payment[p].amount = deliveries[D].commission.insurance;
       }
       if(p == 3){
-        actors[A].payment[p].amount = deliveries[D].commission.insurance;
+        actors[A].payment[p].amount = deliveries[D].commission.treasury;        
       }
       if(p == 4){
         //part of commission + 1 euro / m3 (= volume)
@@ -250,6 +248,8 @@ function compute_amounts(deliveries, actors){
   compute_commission(deliveries);
   compute_Reduction(deliveries);
 }
+
+compute_amounts(deliveries, actors);
 
 
 
