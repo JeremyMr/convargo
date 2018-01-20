@@ -179,7 +179,7 @@ function generate_shipping_prices(deliveries, truckers){
   }
 }
 
-generate_shipping_prices(deliveries, truckers);
+
 
 //Step 3 :
 function compute_commission(deliveries){
@@ -192,17 +192,67 @@ function compute_commission(deliveries){
   }
 }
 
-compute_commission(deliveries);
+
 
 //Step 4 :
 function compute_Reduction(deliveries){
   for(var D in deliveries){
     if(deliveries[D].options.deductibleReduction){
+      //1 euro / m3 = volume
       deliveries[D].price = deliveries[D].price + deliveries[D].volume;
     }
   }
 }
 
-compute_Reduction(deliveries);
+
+
+//Step 5 :
+function compute_amounts(deliveries, actors){
+  for(var A in actors){
+    var deliveries_id_temp = actors[A].deliveryId;
+    var D = 0;
+    while(deliveries[D].id != deliveries_id_temp){
+        D++;
+    } 
+    for(var p in actors[A].payment){
+      console.log(p);
+      //for the shipper :      
+      if(p == 0){
+      //Shipping price + deductible reduction
+      generate_shipping_prices(deliveries, truckers);
+      compute_Reduction(deliveries);
+      actors[A].payment[p].amount = deliveries[D].price;
+      }
+      //for the trucker
+      if(p == 1){
+        //shipping price - commission
+        generate_shipping_prices(deliveries, truckers);        
+        actors[A].payment[p].amount = deliveries[D].price - (deliveries[D].price * 0.3);
+      }
+      //for the treasury, the insurance and convargo :
+      generate_shipping_prices(deliveries, truckers);
+      compute_commission(deliveries);      
+      if(p == 2){
+        //its part of the commission
+        actors[A].payment[p].amount = deliveries[D].commission.treasury;
+      }
+      if(p == 3){
+        actors[A].payment[p].amount = deliveries[D].commission.insurance;
+      }
+      if(p == 4){
+        //part of commission + 1 euro / m3 (= volume)
+        actors[A].payment[p].amount = deliveries[D].commission.convargo + deliveries[D].volume;
+      }
+    }
+  }
+  //generate final prices :
+  generate_shipping_prices(deliveries, truckers);
+  compute_commission(deliveries);
+  compute_Reduction(deliveries);
+}
+
+
+
+
 
 
