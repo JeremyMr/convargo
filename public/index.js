@@ -194,3 +194,15 @@ function compute_commission(deliveries){
 
 compute_commission(deliveries);
 
+//Step 4 :
+function compute_Reduction(deliveries){
+  for(var D in deliveries){
+    if(deliveries[D].options.deductibleReduction){
+      deliveries[D].price = deliveries[D].price + deliveries[D].volume;
+    }
+  }
+}
+
+compute_Reduction(deliveries);
+
+
